@@ -4,7 +4,7 @@ import sys
 import time
 import os
 
-# ===== Admin Check =====
+
 def is_admin():
     try:
         return ctypes.windll.shell32.IsUserAnAdmin()
@@ -17,10 +17,10 @@ if not is_admin():
     )
     sys.exit()
 
-# Base folder
+
 BASE_LOG_FOLDER = os.path.join(os.environ.get("USERPROFILE", "C:\\"), "CFIXER", "logs")
 
-# Create a timestamped subfolder for this run
+
 RUN_TIMESTAMP = time.strftime("%Y-%m-%d_%H-%M-%S")
 LOG_FOLDER = os.path.join(BASE_LOG_FOLDER, RUN_TIMESTAMP)
 
@@ -53,17 +53,17 @@ def splash():
     print("\n⚠️  Make sure to run this as Administrator!")
     pause()
 
-# ===== SFC Scan (Reliable Logging) =====
+
 def run_sfc():
     print("\n🔹 Running SFC /scannow...")
     timestamp = time.strftime("%Y-%m-%d_%H-%M-%S")
     log_file = os.path.join(LOG_FOLDER, f"SFC_scannow_{timestamp}.txt")
     try:
-        # Redirect output to file to ensure logs are captured
+        
         subprocess.run(f'sfc /scannow > "{log_file}" 2>&1', shell=True, check=True)
         print(f"📝 Log saved to: {log_file}")
 
-        # Read log file to check status
+        
         with open(log_file, "r", encoding="utf-8", errors="ignore") as f:
             out = f.read().lower()
 
@@ -79,7 +79,7 @@ def run_sfc():
         print("❌ SFC failed to run!")
     pause()
 
-# ===== DISM Tools =====
+
 def run_dism(option):
     commands = {
         "CheckHealth": "DISM /Online /Cleanup-Image /CheckHealth",
@@ -110,7 +110,7 @@ def run_dism(option):
         print(f"❌ {option} failed to run!")
     pause()
 
-# ===== Other Command Runner =====
+
 def run_command(cmd, description=None):
     if description:
         print(f"\n🔹 {description}...")
@@ -301,4 +301,5 @@ def run_all():
 # ===== Main Execution =====
 if __name__ == "__main__":
     splash()
+
     main_menu()
